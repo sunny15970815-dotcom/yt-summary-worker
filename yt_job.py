@@ -2,13 +2,32 @@
 import os, json, time, random, subprocess, requests
 from datetime import datetime, timezone
 
-VIDEO_ID   = os.getenv("VIDEO_ID", "OAaChcb2QZQ")
-LANG       = os.getenv("LANG", "ko")
-WEBHOOK    = os.getenv("WEBHOOK_URL", "")
-SECRET     = os.getenv("WEBHOOK_SECRET", "")
+import re
+
+VIDEO_URL  = (os.getenv("VIDEO_URL") or "").strip()
+VIDEO_ID   = (os.getenv("VIDEO_ID")  or "").strip()
+LANG       = (os.getenv("LANG")      or "ko").strip()
+WEBHOOK    = (os.getenv("WEBHOOK_URL") or "").strip()
+SECRET     = (os.getenv("WEBHOOK_SECRET") or "").strip()
 
 RETRY_MAX  = int(os.getenv("RETRY_MAX", "6"))
 BASE_WAIT  = int(os.getenv("RETRY_BASE_SEC", "5"))
+
+def extract_video_id(s: str) -> str:
+    if not s:
+        return ""
+    # watch?v=ID, youtu.be/ID, shorts/ID, embed/ID 지원
+    m = re.search(r'(?:v=|/shorts/|youtu\.be/|/embed/)([A-Za-z0-9_-]{6,})', s)
+    return m.group(1) if m else s.strip()
+
+# URL만 들어오면 URL에서 ID 추출
+if VIDEO_URL and not VIDEO_ID:
+    VIDEO_ID = extract_video_id(VIDEO_URL)
+
+# 방어: VIDEO_ID가 최종적으로 비면 실패 처리(원하면 기본값으로 바꿔도 됨)
+if not VIDEO_ID:
+    print(json.dumps({"error": "missing VIDEO_ID/VIDEO_URL"}, ensure_ascii=False))
+    raise SystemExit(2)
 
 def backoff_sleep(i, headers):
     ra = headers.get("Retry-After")
