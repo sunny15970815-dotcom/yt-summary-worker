@@ -80,10 +80,22 @@ def post_result(payload):
     if not WEBHOOK:
         print(json.dumps(payload, ensure_ascii=False))
         return
+
+    send_json = payload
     headers = {"Content-Type": "application/json"}
-    if SECRET: headers["X-Secret"] = SECRET
+
+    # 디스코드 웹훅이면 content로 변환
+    if "discord.com/api/webhooks/" in WEBHOOK:
+        vid = payload.get("video_id", "")
+        summ = (payload.get("summary") or "").strip() or "(요약 없음)"
+        msg = f"[YT 요약] id={vid}\n{summ}"
+        send_json = {"content": msg}
+    elif SECRET:
+        # 일반 서버 웹훅이면 시크릿 헤더 전달
+        headers["X-Secret"] = SECRET
+
     for i in range(RETRY_MAX):
-        r = requests.post(WEBHOOK, data=json.dumps(payload), headers=headers, timeout=30)
+        r = requests.post(WEBHOOK, data=json.dumps(send_json), headers=headers, timeout=30)
         if r.status_code != 429:
             print("[post]", r.status_code, r.text[:200])
             return
