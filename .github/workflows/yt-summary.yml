@@ -1,0 +1,26 @@
+name: yt-summary
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # 15분마다(UTC)
+  workflow_dispatch: {}      # 수동 실행 버튼
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run job
+        env:
+          VIDEO_ID: ${{ secrets.VIDEO_ID }}
+          LANG: "ko"
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          RETRY_MAX: "6"
+          RETRY_BASE_SEC: "5"
+        run: python yt_job.py
