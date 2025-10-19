@@ -1,0 +1,46 @@
+{
+  "1376078519192256653": [
+    {
+      "yt_channel_id": "UCYV2YO8h1cOvNWtRyV9328A",
+      "channel_title": "김단장의 끌어당김",
+      "post_channel_id": 1379803235396878440,
+      "template": "{author} 에서 {title} 이 올라왔어요! {url} ㅣ 돌아가기 → <#1413738735224230012>",
+      "since_ts": "2025-10-17T10:00:00+00:00"
+    },
+    {
+      "yt_channel_id": "UCAAm3QOeNcHmSa2C1V-Tu1w",
+      "channel_title": "짧은명언:AWAKE",
+      "post_channel_id": 1379803448547213352,
+      "template": "{author} 에서 {title} 이 올라왔어요! {url} ㅣ 돌아가기 → <#1413738735224230012>",
+      "since_ts": "2025-10-17T08:52:00+00:00"
+    },
+    {
+      "yt_channel_id": "UCrZvFIT3AC-fj7aHm3M2m_Q",
+      "channel_title": "멘탈훈련소",
+      "post_channel_id": 1379803448547213352,
+      "template": "{author} 에서 {title} 이 올라왔어요! {url} ㅣ 돌아가기 → <#1413738735224230012>",
+      "since_ts": "2025-10-17T08:51:30+00:00"
+    },
+    {
+      "yt_channel_id": "UCPGtMoXOll9p5j6c6lq_7uA",
+      "channel_title": "제로부터백까지",
+      "post_channel_id": 1379803087132430437,
+      "template": "{author} 에서 {title} 이 올라왔어요! {url} ㅣ 돌아가기 → <#1413738735224230012>",
+      "since_ts": "2025-08-22T06:54:35+00:00"
+    },
+    {
+      "yt_channel_id": "UCQ2DWm5Md16Dc3xRwwhVE7Q",
+      "channel_title": "EO Korea",
+      "post_channel_id": 1379803087132430437,
+      "template": "{author} 에서 {title} 이 올라왔어요! {url} ㅣ 돌아가기 → <#1413738735224230012>",
+      "since_ts": "2025-10-16T10:01:15+00:00"
+    },
+    {
+      "yt_channel_id": "UCijBTYEiKT1OJO54C6PnRqw",
+      "channel_title": "WLDO",
+      "post_channel_id": 1379803235396878440,
+      "template": "{author} 에서 {title} 이 올라왔어요! {url} ㅣ 돌아가기 → <#1413738735224230012>",
+      "since_ts": "2025-10-16T09:05:01+00:00"
+    }
+  ]
+}
