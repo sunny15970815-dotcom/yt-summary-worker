@@ -1,26 +1,50 @@
 name: yt-summary
 on:
+  # (선택) 스케줄은 유지하되 입력이 없으면 스킵하도록 앱에서 처리
   schedule:
     - cron: "*/15 * * * *"   # 15분마다(UTC)
-  workflow_dispatch: {}      # 수동 실행 버튼
+  # 매 실행마다 URL/ID/언어를 입력으로 받음
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: "YouTube URL (예: https://youtu.be/OAaChcb2QZQ)"
+        required: false
+        default: ""
+      video_id:
+        description: "YouTube VIDEO_ID (URL 대신 직접 입력 가능, 예: OAaChcb2QZQ)"
+        required: false
+        default: ""
+      lang:
+        description: "요약 언어"
+        required: false
+        default: "ko"
+
 jobs:
   run:
     runs-on: ubuntu-latest
-    permissions: { contents: read }
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
+        with:
+          python-version: "3.11"
+
       - name: Install deps
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
       - name: Run job
         env:
-          VIDEO_ID: ${{ secrets.VIDEO_ID }}
-          LANG: "ko"
-          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          # ← 여기서부터 입력값 사용
+          VIDEO_URL: ${{ github.event.inputs.video_url }}
+          VIDEO_ID:  ${{ github.event.inputs.video_id }}
+          LANG:      ${{ github.event.inputs.lang }}
+          # 웹훅(선택): 디스코드나 서버용 URL/시크릿은 Secrets에 보관
+          WEBHOOK_URL:    ${{ secrets.WEBHOOK_URL }}
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
-          RETRY_MAX: "6"
+          # 재시도 파라미터
+          RETRY_MAX:      "6"
           RETRY_BASE_SEC: "5"
         run: python yt_job.py
