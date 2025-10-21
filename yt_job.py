@@ -24,10 +24,10 @@ def extract_video_id(s: str) -> str:
 if VIDEO_URL and not VIDEO_ID:
     VIDEO_ID = extract_video_id(VIDEO_URL)
 
-# 방어: VIDEO_ID가 최종적으로 비면 실패 처리(원하면 기본값으로 바꿔도 됨)
-if not VIDEO_ID:
-    print(json.dumps({"error": "missing VIDEO_ID/VIDEO_URL"}, ensure_ascii=False))
-    raise SystemExit(2)
+# 입력이 모두 없으면(특히 schedule 실행) 작업을 건너뛰고 정상 종료
+if not VIDEO_ID and not VIDEO_URL:
+    print(json.dumps({"skip": "no VIDEO_ID/VIDEO_URL (schedule or empty input)"}, ensure_ascii=False))
+    raise SystemExit(0)
 
 def backoff_sleep(i, headers):
     ra = headers.get("Retry-After")
