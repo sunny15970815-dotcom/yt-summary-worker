@@ -35,16 +35,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run job
-        env:
-          # ← 여기서부터 입력값 사용
-          VIDEO_URL: ${{ github.event.inputs.video_url }}
-          VIDEO_ID:  ${{ github.event.inputs.video_id }}
-          LANG:      ${{ github.event.inputs.lang }}
-          # 웹훅(선택): 디스코드나 서버용 URL/시크릿은 Secrets에 보관
-          WEBHOOK_URL:    ${{ secrets.WEBHOOK_URL }}
-          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
-          # 재시도 파라미터
-          RETRY_MAX:      "6"
-          RETRY_BASE_SEC: "5"
-        run: python yt_job.py
+- name: Run job
+  if: ${{ github.event_name == 'workflow_dispatch' || inputs.video_url != '' || inputs.video_id != '' || secrets.VIDEO_ID != '' || vars.DEFAULT_VIDEO_ID != '' }}
+  env:
+    VIDEO_URL: ${{ inputs.video_url }}
+    VIDEO_ID:  ${{ inputs.video_id != '' && inputs.video_id || (secrets.VIDEO_ID != '' && secrets.VIDEO_ID || vars.DEFAULT_VIDEO_ID) }}
+    LANG:      ${{ inputs.lang != '' && inputs.lang || 'ko' }}
+    WEBHOOK_URL:    ${{ secrets.WEBHOOK_URL }}
+    WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+    RETRY_MAX: "6"
+    RETRY_BASE_SEC: "5"
+  run: python yt_job.py
